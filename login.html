@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--version=1.00-->
+<!-- Log here -->
+<!-- 2022/02/25 -->
+<!-- 新規作成 -->
+
+
+<html lang="en">
+
+<head>
+    <title>ログイン</title>
+    <meta name="rights" content="HAKARU+ CORPORATION" />
+    <meta name="dateCopyrighted" content="2021/11" />
+    <meta name="author" content="Hakaru+" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="google" content="notranslate">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link href="/css/mchp.css" rel="stylesheet" />
+    <link rel="icon" href="/img/animated_favicon.gif">
+    <style>
+    </style>
+</head>
+
+<body>
+    <div id="Wrapper">
+        <div class="lay-login">
+            <div class="lay-login__sub">
+                <div class="center">
+                    <img src="./img/login_logo.png" alt="ハカルプラスクラウド" class="center">
+                </div>
+                <div class="hpc10">
+                    <span>ハカルプラスクラウド</span>
+                </div>
+                <div class="login-form">
+                    <div>
+                        <p id="error"></p>
+                        <input type="hidden" name="csrf_token" value="">
+                    </div>
+                    <form id="idLoginForm" onsubmit="return false;">
+                        <label for="company_id">組織ID</label>
+                        <input type="text" name="company_id" id="company_id" autocomplete="off">
+
+                        <label for="login_id">ログインID</label>
+                        <input type="text" name="login_id" id="login_id" autocomplete="off">
+
+                        <label for="password">パスワード</label>
+                        <input type="password" name="password" id="password" autocomplete="off">
+
+                        <div class="checkbox-frame">
+                            <label>
+                                <input type="checkbox" name="checkbox" class="checkbox-input">
+                                <span class="checkbox-parts">組織IDとログインIDを記憶する。</span>
+                            </label>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary" id="idloginbtn"
+                                onclick="sendLoginInformation();">ログイン</button>
+                        </div>
+                    </form>
+                    <form id="idOtpForm" class="d-none" onsubmit="return false;">
+                        <label for="otp_code">認証コード</label>
+                        <input type="text" name="otp_code" id="otp_code" autocomplete="off">
+
+                        <div id="idResendFrame" class="resend-frame d-none">
+                            <a href="#" onclick="sendLoginInformation();">コードを再送信する</a>
+                        </div>
+
+                        <div>
+                            <button type="submit" class="btn btn-primary" id="idsendotpbtn"
+                                onclick="CheckOtp();">確認</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load script start-->
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="/js/sweetalert.min.js"></script>
+    <script src="/js/http.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/login.js"></script>
+    <!-- Load script end -->
+</body>
+
+</html>

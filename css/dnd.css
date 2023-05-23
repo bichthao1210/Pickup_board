@@ -1,0 +1,29 @@
+#div1 {
+    width: 350px;
+    height: 70px;
+    padding: 10px;
+    /* not required, just shows hitboxes */
+    border: 2px solid lime;
+}
+
+#div2 {
+    width: 350px;
+    height: 70px;
+    padding: 10px;
+    /* not required, just shows hitboxes */
+    border: 2px solid magenta;
+}
+
+#drag1 {
+    /* not required, just shows hitboxes */
+    display: inline-block;
+    border: 2px solid cyan;
+}
+
+.pickup-card-container {
+    padding: 0px;
+}
+
+.pickup-card {
+    padding: 0px;
+}

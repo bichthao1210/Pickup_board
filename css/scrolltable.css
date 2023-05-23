@@ -1,0 +1,68 @@
+/*version=1.00*/
+
+.table-container {
+    position: relative;
+    table-layout: fixed;
+    height: 79vh;
+    width: 100%;
+}
+.scroll-table {
+    /* width: 300px; */
+    overflow-x: auto;
+    display: block;
+    position: sticky; 
+    top: 0;
+    width: 100%;
+}
+.scroll-table > thead,
+.scroll-table > tbody {
+    display: block;
+    width: 100%;
+}
+.scroll-table > tbody {
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 74vh;
+}
+
+.scroll-table > tbody > tr > td {
+    padding: 5px;
+    width:100%;
+    text-align: center;
+}
+.scroll-table > tbody > tr > td:nth-child(3) {
+    text-align: left;
+}
+
+.scroll-table > tbody > tr {
+    display:table !important;
+    width:100%;
+}
+.scroll-table > thead > tr {
+    display:table !important;
+    width:100%;
+}
+
+.scroll-table > tbody > tr > td:nth-child(1),
+.scroll-table > thead > tr > th:nth-child(1) {
+    width:20%
+}
+.scroll-table > tbody > tr > td:nth-child(2),
+.scroll-table > thead > tr > th:nth-child(2) {
+    width:20%
+}
+
+.scroll-table > thead > tr > th {
+    text-align: center;
+    background: #fcc614;
+    color: white;
+    height:2em;
+    font-size: 16px;
+    
+}
+.scroll-table > tbody > tr:nth-child(even) {
+    background: gainsboro;
+}
+.lastcol {
+    padding-right: 15px;
+}

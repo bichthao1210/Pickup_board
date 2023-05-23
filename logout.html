@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+
+<!--version=1.05-->
+<!-- Log here -->
+<!-- 2020/12/14 -->
+<!-- 管理ユーザーと一般ユーザーを対応 -->
+
+<html lang="ja">
+  <head>
+    <title>ハカルプラスクラウド</title>
+    <meta name="rights" content="HAKARU+ CORPORATION" />
+    <meta name="dateCopyrighted" content="2018/03" />
+    <meta name="author" content="Minh Huong" />
+
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta http-equiv="Content-Language" content="ja" />
+    <meta name="google" content="notranslate" />
+
+    <link rel="icon" href="/img/animated_favicon.gif" />
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+    <style>
+      html,
+      body {
+        height: 100%;
+      }
+      .container,
+      .row.justify-content-center.align-items-center {
+        height: 100%;
+        min-height: 100%;
+      }
+
+      .loader {
+        border: 16px solid #f3f3f3; /* Light grey */
+        border-top: 16px solid #3498db; /* Blue */
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Sidebar and Main -->
+    <div class="container">
+      <main
+        id="idlogouthtml"
+        class="row h-100 justify-content-center align-items-center"
+      >
+        <div id="backtop" class="d-none">
+          <h5 class="text-center">ログアウトしました。</h5>
+          <div class="text-center">
+            <a href="/index.html" id="jumper" class="text-primary nav-link"
+              >TOP画面へ戻る</a
+            >
+          </div>
+        </div>
+        <div id="loader" class="loader"></div>
+      </main>
+    </div>
+
+    <noscript>
+      <a href="/index.html" id="jumper" class="text-primary nav-link">TOP画面へ戻る</a>
+    </noscript>
+
+    <!-- Load script start-->
+    <script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/js/auth.js"></script>
+
+    <!-- Load script end -->
+    <script>
+      // When DOM full load
+      $(document).ready(function () {
+        var redirUrl = "/";
+        ClearAuthentication(redirUrl);
+      });
+
+      // TOP画面へ戻るをクリックする時 -> Clear Logout template
+      var jumper = document.getElementById("jumper");
+      jumper.onclick = function (event) {
+        // event.preventDefault();
+        document.getElementById("idlogouthtml").innerHTML = "";
+        if (history.pushState) {
+          window.history.pushState("", "", "/index.html");
+        } else {
+          document.location.href = "/index.html";
+        }
+      };
+
+      // Clear Authentication -> Log out
+      function ClearAuthentication(topPage) {
+        var IsInternetExplorer = false;
+
+        try {
+          var ua = window.navigator.userAgent;
+          var msie = ua.indexOf("MSIE");
+
+          if (msie != -1 || !!navigator.userAgent.match(/Trident.*rv\:11\./)) {
+            IsInternetExplorer = true;
+          }
+        } catch (e) {
+          IsInternetExplorer = false;
+        }
+
+        // Logoff Internet Explorer
+        if (IsInternetExplorer) {
+          document.execCommand("ClearAuthenticationCache", false);
+        }
+        // Others
+        else {
+          $("#loader").addClass("d-none");
+          $("#backtop").removeClass("d-none");
+        }
+        logout();
+      }
+    </script>
+  </body>
+</html>

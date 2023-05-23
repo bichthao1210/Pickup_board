@@ -1,0 +1,71 @@
+/* required file for gridstack to work */
+@import "gridstack.min.css";
+
+/* Optional styles for demos */
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+}
+
+.btn {
+  display: inline-block;
+  padding: .375rem .75rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+}
+
+a {
+  text-decoration: none;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: .5rem;
+}
+
+.grid-stack {
+  /* background: #FAFAD2; */
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  background: url('https://images.unsplash.com/photo-1497465135434-9dc15238075a?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1416&q=80') repeat center center / cover;
+  margin: 0;
+  padding: 0;
+  /* border: 1px solid red; */
+  position: absolute;
+  width: 3168px;
+} 
+
+.grid-stack-item-content {
+  color: #2c3e50;
+  text-align: center;
+  background-color: #fff;
+  box-shadow:2px 2px 2px 1px #b4b6b8;
+  overflow: hidden !important;
+}
+
+/* make nested grid have slightly darker bg take almost all space (need some to tell them apart) so items inside can have similar to external size+margin */
+.grid-stack > .grid-stack-item.grid-stack-sub-grid > .grid-stack-item-content {
+  background: rgba(0,0,0,0.1);
+  inset: 0 2px;
+}
+.grid-stack.grid-stack-nested {
+  background: none;
+  /* background-color: red; */
+  /* take entire space */
+  position: absolute;
+  inset: 0; /* TODO change top: if you have content in nested grid */
+}
+
+.grid-stack-item .panel-body {
+  height: calc(100% - 20px);
+  width: calc(100% - 20px);
+}
+
+.panel-body {
+  margin: 10px;
+}
+
+.chart-container {
+  height: calc(100% - 20px);
+}

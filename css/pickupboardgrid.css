@@ -1,0 +1,349 @@
+  /* Grid */
+
+  .grid {
+    position: relative;
+    min-width: 70.5rem;
+    padding-bottom: 1rem;
+    /* box-sizing: content-box; */
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .grid-border {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+
+  .grid-border:not(:last-child) {
+    border-bottom: 1px solid rgb(199, 191, 191);
+  }
+
+  .grid-border:last-child {
+    min-height: 8.8rem;
+    background-color: rgb(222, 222, 222);
+    margin-top: 0.5rem;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    opacity: 0.3;
+  }
+
+  .grid-item {
+    position: absolute;
+    width: 10rem;
+    height: 10rem;
+    line-height: 1rem;
+    margin: 0.5rem;
+    z-index: 1;
+    box-shadow:2px 2px 2px 1px #b4b6b8;
+  }
+
+  .grid-item.muuri-item-positioning {
+    z-index: 2;
+  }
+
+  .grid-item.muuri-item-placeholder {
+    z-index: 2;
+    margin: 0;
+    opacity: 0.5;
+  }
+
+  .grid-item.muuri-item-dragging,
+  .grid-item.muuri-item-releasing {
+    z-index: 9999;
+  }
+
+  .grid-item.muuri-item-dragging {
+    cursor: move;
+  }
+
+  .grid-item.muuri-item-hidden {
+    z-index: 0;
+  }
+
+  .item-container1 {
+    position: relative;
+    align-items: center;
+    width: 45%;
+    height: 50px;
+    border-right: 1px solid rgb(192, 192, 192);
+  }
+  .item-container2 {
+    position: relative;
+    align-items: center;
+    width: 55%;
+    height: 50px;
+  }
+  .item-container3 {
+    position: relative;
+    text-align: center;
+    width: 100%;
+    border-top: 1px solid rgb(192, 192, 192);
+    height: 36px;
+  }
+  .centered-element {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+  }
+
+  .centered-element img {        
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+  }
+
+  .centered-weather {
+    margin-top: 2px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    padding: 0 2px;
+  }
+
+  .centered-weather-longtext {
+    font-weight: 500;
+    font-size: 0.7rem;
+  }
+
+  .centered-weather-ultratext {
+    font-weight: 500;
+    font-size: 0.7rem;
+    line-height: 0.725rem;
+    position:relative;
+  }
+
+  .centered-weather-ultratext .tooltiptext {
+    visibility: hidden;
+    width: 170px;
+    background-color: #007bff;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 2px;
+    line-height: 1rem;
+    font-weight: 500;
+    font-size: 0.8rem;
+  
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+  }
+  
+  .centered-weather-ultratext:hover .tooltiptext {
+    visibility: visible;
+  }
+
+  .temp {
+    /* padding-top: 3px;
+    padding-bottom: 3px; */
+    text-align: center;
+    margin: 0 auto;
+    width: 100%;
+    white-space:nowrap;
+  }
+
+  .temp-minval {
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: #0096FF;
+  }
+
+  .temp-maxval {
+    font-weight: 500;
+    font-size: 1.15rem;
+    color: #FF0000;
+  }
+
+  .rain-title {
+    font-weight: 300;
+    font-size: 0.7rem;
+    padding-right: 2px;
+  }
+
+  .rain-value {
+    font-weight: 500;
+    font-size: 1.15rem;
+  }
+
+  .rain {
+    /* padding-top: 2px; */
+    text-align: center;
+    width: 92%;
+    margin: 0 auto;
+    border-top: 2px dotted rgb(30, 114, 65);
+	  white-space:nowrap;
+  }
+
+  .measurement-title {
+    font-weight: 600;
+    /* font-size: .875rem; */
+  }
+
+  .measurement-value {
+    padding-right: 3px;
+    width: 100%;
+    font-weight: 600;
+    /* font-size: 1rem; */
+  }
+
+  .measurement-unit {
+    width: 60px;
+    /* border: 1px solid red; */
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+  }
+
+  .grid-item.card-tiny {
+    height: 7.8rem;
+    width: 10.7rem;
+  }
+
+  .grid-item.card-small {
+    height: 7.8rem;
+    width: 22.5rem;
+  }
+
+  .grid-item.card-medium {
+    height: 16.6rem;
+    width: 22.5rem;
+  }
+
+  .grid-item.card-large {
+    height: 16.6rem;
+    width: 46rem;
+  }
+
+  .grid-item-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .grid-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    text-align: center;
+    /* font-size: 2.4rem;
+    font-weight: 700; */
+    border: 0.5rem solid #fff;
+    border-radius: 2rem;
+    -webkit-transition: all 0.2s ease-out;
+    -moz-transition: all 0.2s ease-out;
+    -ms-transition: all 0.2s ease-out;
+    -o-transition: all 0.2s ease-out;
+    transition: all 0.2s ease-out;
+  }
+
+  .grid-card-handle {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    cursor: move;
+  }
+
+  .grid.drag-enabled .grid-card-handle {
+    display: block;
+  }
+
+  /* Drag container */
+
+  .drag-container {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+  }
+
+  /* Pickup Board wrapper */
+
+  .pickupboard {
+    position: relative;
+    /* border-width: 0.5rem 1rem 1rem 0.5rem;
+    border-style: solid;
+    border-color: rgb(101, 255, 195); */
+    /* border-image: initial;
+    border-radius: 1rem; */
+  }
+
+  /* Sections */
+
+  section {
+    margin: 0 auto;
+    padding-top: 0;
+    /* max-width: 94rem; */
+    width: 100%;
+    text-align: left;
+  }
+
+  section.pickupboard {
+    margin-top: 3rem;
+  }
+
+  section h4 {
+    margin: 3rem 0 1.5rem 0;
+    font-weight: 500;
+    /* font-size: 2rem; */
+    color: #3e3e3e;
+  }
+
+  @media (max-width: 767px) {
+    section.pickupboard {
+      border-top: 0;
+    }
+  }
+
+  .pickupboardgs {
+    margin-right: -15px !important;
+    margin-left: -15px !important;
+  }
+
+  /* .cardstate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width:100%;
+  } */
+
+  .cardstate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .cardstatecontent {
+    max-width: 100%;
+    max-height: 100%;
+    text-align: left;
+    vertical-align: top;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .grid-item-content tr td {
+    background: #fff;
+  }
