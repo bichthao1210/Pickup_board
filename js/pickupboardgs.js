@@ -222,11 +222,10 @@ function generateCard(card) {
     tbl += '<tr id="chart' + card.cardNo + '">';
     tbl += '<td id="idItemTitle" class="panel-body" style="padding:0;">';
     tbl += '<div class="chart-container">';
-    tbl += '<canvas id="myChart"></canvas>';
+    tbl += '<canvas id="myChart"></canvas>'; 
     tbl += "</div>";
     tbl += "</td>";
     tbl += "</tr>";
-    
 
     const url = 'https://qtucgrun66.execute-api.ap-northeast-1.amazonaws.com/v1/api-hlrgwl-web?path=pickup&type=getRealtimeData&pickupNo=1';
     const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiaGFrYXJ1MDEiLCJ1c2VyX25hbWUiOiJoYWthcnUwMiIsInVzZXJfdHlwZSI6MSwiZXhwIjoxNzE0MTE1MjM4LCJpYXQiOjE2ODI1NzkyMzh9.dg5vkF66NOsYs1o9VFr38v1VyjkvWWJB3wDHk1ieyP8';
@@ -243,7 +242,7 @@ function generateCard(card) {
       if (filteredData[0].cardType === 0) {
         chartType = 'line';
       } else if (filteredData[0].cardType === 1) {
-        chartType = 'bar';
+        chartType = 'bar'; 
       }
 
       // get the data for each output in the outputData array
@@ -298,6 +297,12 @@ function generateCard(card) {
     });
 
 
+  } else if (card.cardType === 4) {
+      tbl += '<tr>';
+      tbl += '<td colspan="4" style="padding: 0;">';
+      tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" rows="3" placeholder="Enter text"></textarea>';
+      tbl += '</td>';
+      tbl += '</tr>';   
   }
   // 状態カード
   else {
@@ -417,7 +422,8 @@ function generateCard(card) {
   return itemElem.firstChild;
 }
 
-function createWidgetCardElement(card) {
+
+function createWidgetCardElement(card) { 
   const SIZE_UNIT = 1;
   const itemElem = generateCard(card);
   let item = {
@@ -429,7 +435,7 @@ function createWidgetCardElement(card) {
     content: '',
     noResize: true,
     id: card.cardNo
-  };
+  }; 
 
   if (card.cardType === 0) {
     if (card.outputData && card.outputDataIdxMax > 5) {
@@ -453,6 +459,8 @@ function createWidgetCardElement(card) {
     itemElem.classList.add("card-large");
     item.w = SIZE_UNIT * 4;
     item.h = SIZE_UNIT * 4;
+  } else if (card.cardType === 4) {
+    
   }
   else {
     if (card.outputData && card.outputDataIdxMax > 5) {
@@ -734,12 +742,13 @@ function resizeGrid() {
 //   // Ẩn popup
 //   popup.style.display = 'none';
 // });
+// Lấy thông tin về card
 
 
 // // Hàm tạo card từ dữ liệu và thêm vào cardContainer
 // function createCard(cardData, cardContainer) {
 //   const newCard = document.createElement('div');
-//   newCard.className = 'card';
+//   newCard.className = 'card grid-stack-item';
 //   newCard.style.width = `${cardData.cardSize * 200}px`;
 //   newCard.style.height = `${cardData.cardSize * 200}px`;
 //   const defaultTop = cardData.top || 0; // Vị trí mặc định nếu không được xác định
@@ -1034,6 +1043,12 @@ function resizeGrid() {
 //       // Remaining code for the "予報カード" card type
 //     } else if (card.cardType === 3) {
 //       // Remaining code for the "グラフカード" card type
+//     } else if (card.cardType === 4) {
+//       tbl += '<tr>';
+//       tbl += '<td colspan="4" style="padding: 0;">';
+//       tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" rows="3" placeholder="Enter text"></textarea>';
+//       tbl += '</td>';
+//       tbl += '</tr>';
 //     }
   
 //     tbl += "</tbody>";
@@ -1051,8 +1066,6 @@ function resizeGrid() {
   
 //   // Example usage
 //   var cardMemo = {
-//     cardNo: 1,
-//     viewIdx: 1,
 //     name: "Memo Card",
 //     colorCode: "#ff0000",
 //     cardType: 4,

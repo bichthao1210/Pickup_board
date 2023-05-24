@@ -11,7 +11,7 @@ applySettingsButton.addEventListener('click', function() {
     var headerColor = document.getElementById('headerColor').value;
     var cardSize = document.getElementById('cardSize').value;
     var codeToAdd = `
-        <div class="grid-stack-item ui-draggable ui-resizable-disabled" gs-x="${gsXCounter}" gs-y="${gsYCounter}" gs-w="${cardSize}" gs-h="${cardSize}" gs-no-resize="true" gs-id="${uniqueGsId}">
+        <div class="grid-stack-item ui-draggable ui-resizable-disabled" gs-x="${cardNo}" gs-y="${gsYCounter}" gs-w="${cardSize}" gs-h="${cardSize}" gs-no-resize="true" gs-id="${uniqueGsId}">
             <div class="grid-stack-item-content">
                 <div class="grid-item-content">
                     <table class="table table-bordered grid-item-content">
@@ -29,8 +29,6 @@ applySettingsButton.addEventListener('click', function() {
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <div class="ui-resizable-handle ui-resizable-se" style="z-index: 100; user-select: none;">
             </div>
         </div>
     `;
