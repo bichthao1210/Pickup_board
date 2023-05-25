@@ -300,7 +300,7 @@ function generateCard(card) {
   } else if (card.cardType === 4) {
       tbl += '<tr>';
       tbl += '<td colspan="4" style="padding: 0;">';
-      tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" rows="3" placeholder="Enter text"></textarea>';
+      tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" placeholder="Enter text"></textarea>';
       tbl += '</td>';
       tbl += '</tr>';   
   }
@@ -421,7 +421,6 @@ function generateCard(card) {
   itemElem.innerHTML = tbl;
   return itemElem.firstChild;
 }
-
 
 function createWidgetCardElement(card) { 
   const SIZE_UNIT = 1;
@@ -652,6 +651,7 @@ function initPickupBoard(locationFixFlag) {
   }, FETCH_INTERVAL.INSTANCE);
 }
 
+
 function getGridColumns() {
   let columns = 8;
   let width = document.body.clientWidth;
@@ -692,57 +692,71 @@ function resizeGrid() {
 
 
 
-// // Lấy các phần tử cần sử dụng
-// const openPopupButton = document.getElementById('openPopup');
-// const popup = document.getElementById('popup');
-// const applySettingsButton = document.getElementById('applySettings');
-// const titleInput = document.getElementById('cardTitle');
-// const headerColorInput = document.getElementById('headerColor');
-// const cardSizeInput = document.getElementById('cardSize');
+// Lấy các phần tử cần sử dụng
+const openPopupButton = document.getElementById('openPopup');
+const popup = document.getElementById('popup');
+const applySettingsButton = document.getElementById('applySettings');
+const titleInput = document.getElementById('cardTitle');
+const headerColorInput = document.getElementById('headerColor');
+const cardSizeInput = document.getElementById('cardSize');
 // const cardContainer = document.getElementById('cardContainer');
 // const grid = document.querySelector('.grid-stack');
+// const gsItems = [];
+
 
 // let textEditMode = false;
 // let locked = false;
 // let textEditModeLocked = false;
 
 
-// // Xử lý khi click vào nút mở popup
-// openPopupButton.addEventListener('click', function () {
-//   popup.style.display = 'block';
-// });
+// Xử lý khi click vào nút mở popup
+openPopupButton.addEventListener('click', function () {
+  popup.style.display = 'block';
+});
 
-// document.getElementById('openPopup').addEventListener('click', function() {
-//   document.getElementById('popup').style.display = 'block';
-// });
+document.getElementById('openPopup').addEventListener('click', function() {
+  document.getElementById('popup').style.display = 'block';
+});
 
-// document.getElementById('closePopup').addEventListener('click', function() {
-//   document.getElementById('popup').style.display = 'none';
-// });
+document.getElementById('closePopup').addEventListener('click', function() {
+  document.getElementById('popup').style.display = 'none';
+});
 
-// // Xử lý khi click vào nút áp dụng thiết lập
-// applySettingsButton.addEventListener('click', function () {
-//   const title = titleInput.value;
-//   const headerColor = headerColorInput.value;
-//   const cardSize = cardSizeInput.value;
+// Xử lý khi click vào nút áp dụng thiết lập
+applySettingsButton.addEventListener('click', function () {
+  const title = titleInput.value;
+  const headerColor = headerColorInput.value;
+  const cardSize = cardSizeInput.value;
 
-//   // Tạo card mới và thêm vào trang
-//   const newCardData = {
-//     title: title,
-//     headerColor: headerColor,
-//     cardSize: cardSize,
-//   };
-//   createCard(newCardData, cardContainer);
+  // Tạo card mới và thêm vào trang
+  const newData = {
+    areaNo: '',
+    cardNo: 100,
+    cardType: 2,
+    colorCode: '000000',
+    lineIdx: 0,
+    name: title,
+  };
 
-//   // Lưu vị trí của card vào localStorage
-//   const cardsData = getCardsDataFromLocalStorage();
-//   cardsData.push(newCardData);
-//   localStorage.setItem('cardsData', JSON.stringify(cardsData));
+  let n = createWidgetCardElement(newData);
+  // n.noMove = !!isMobile || (column <= 4) || (glocationFixFlag==1);
+  gs.addWidget(n);
+  // console.log('id=' + n.id + ' x=' + n.x + ' y=' + n.y + ' text=' + n.text );
+  const cloneN = JSON.parse(JSON.stringify(n));
+  gsItems[cloneN.id] = cloneN;
+  gs.batchUpdate(false);
+  resizeGrid();
 
-//   // Ẩn popup
-//   popup.style.display = 'none';
-// });
-// Lấy thông tin về card
+  // createCard(newCardData, cardContainer);
+
+  // // Lưu vị trí của card vào localStorage
+  // const cardsData = getCardsDataFromLocalStorage();
+  // cardsData.push(newCardData);
+  // localStorage.setItem('cardsData', JSON.stringify(cardsData));
+
+  // Ẩn popup
+  popup.style.display = 'none';
+});
 
 
 // // Hàm tạo card từ dữ liệu và thêm vào cardContainer
@@ -803,6 +817,7 @@ function resizeGrid() {
 //   newCard.appendChild(newCardHeader);
 //   newCard.appendChild(newCardBody);
 //   cardContainer.appendChild(newCard);
+//   gsItems.push(newCard);
 
 //   // Kích hoạt việc di chuyển card
 //   enableDrag(newCard);
