@@ -221,12 +221,14 @@ function generateCard(card) {
   } else if (card.cardType === 3) {
     tbl += '<tr id="chart' + card.cardNo + '">';
     tbl += '<td id="idItemTitle" class="panel-body" style="padding:0;">';
-    tbl += '<div class="chart-container">';
+    tbl += '<div class="chart-container" >';
     tbl += '<canvas id="myChart"></canvas>'; 
     tbl += "</div>";
     tbl += "</td>";
     tbl += "</tr>";
-
+    let myChart;
+    let filteredData;
+    function createChart() {
     const url = 'https://qtucgrun66.execute-api.ap-northeast-1.amazonaws.com/v1/api-hlrgwl-web?path=pickup&type=getRealtimeData&pickupNo=1';
     const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiaGFrYXJ1MDEiLCJ1c2VyX25hbWUiOiJoYWthcnUwMiIsInVzZXJfdHlwZSI6MSwiZXhwIjoxNzE0MTE1MjM4LCJpYXQiOjE2ODI1NzkyMzh9.dg5vkF66NOsYs1o9VFr38v1VyjkvWWJB3wDHk1ieyP8';
     const config = {
@@ -266,9 +268,10 @@ function generateCard(card) {
         spanGaps: true, // thêm spanGaps: true để cho phép vẽ đường thẳng nối các điểm của biểu đồ
       };
       
+
       // create a new chart instance
       const ctx = document.getElementById("myChart").getContext("2d");
-      const myChart = new Chart(ctx, {
+      myChart = new Chart(ctx, {
         type: chartType, // set the chart type based on the cardType
         data: {
           labels: filteredData[0].outputData[0].data.map((dataItem) => moment(dataItem.time).format("HH:mm")),
@@ -288,6 +291,9 @@ function generateCard(card) {
           },
           responsive: true,
           maintainAspectRatio: false,
+          animation: {
+            duration: 0, // Vô hiệu hóa hiệu ứng animation
+          }, 
         },
       });
     })
@@ -295,15 +301,29 @@ function generateCard(card) {
     .catch((error) => {
       console.error(error);
     });
+    }
 
-
+    // Gọi hàm tạo biểu đồ và lấy dữ liệu từ API khi trang được tải lần đầu
+    createChart();
+    
+    // Refresh biểu đồ và lấy dữ liệu từ API khi kích thước cửa sổ thay đổi
+    window.addEventListener("resize", function () {
+      if (myChart) {
+        myChart.destroy(); // Hủy bỏ biểu đồ hiện tại
+      }
+      createChart(); // Tạo lại biểu đồ và lấy dữ liệu từ API
+    });
+  // } else if (card.cardType === 4) {
+  //     tbl += '<tr>';
+  //     tbl += '<td colspan="4" style="padding: 0;">';
+  //     tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" placeholder="Enter text"></textarea>';
+  //     tbl += '</td>';
+  //     tbl += '</tr>';   
+  // }
   } else if (card.cardType === 4) {
-      tbl += '<tr>';
-      tbl += '<td colspan="4" style="padding: 0;">';
-      tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" placeholder="Enter text"></textarea>';
-      tbl += '</td>';
-      tbl += '</tr>';   
-  }
+    tbl += '<tr class="card-type-4">';
+    tbl += '</tr>'; 
+}
   // 状態カード
   else {
     dataIdxMax=card.outputDataIdxMax;
@@ -458,9 +478,12 @@ function createWidgetCardElement(card) {
     itemElem.classList.add("card-large");
     item.w = SIZE_UNIT * 4;
     item.h = SIZE_UNIT * 4;
-  } else if (card.cardType === 4) {
-    
   }
+    else if (card.cardType === 4) {
+      itemElem.classList.add("card-type4");
+      item.w = SIZE_UNIT * card.cardSize;
+      item.h = SIZE_UNIT * card.cardSize;
+    }
   else {
     if (card.outputData && card.outputDataIdxMax > 5) {
       itemElem.classList.add("card-large");
@@ -690,8 +713,6 @@ function resizeGrid() {
   }, 100);
 }
 
-
-
 // Lấy các phần tử cần sử dụng
 const openPopupButton = document.getElementById('openPopup');
 const popup = document.getElementById('popup');
@@ -699,15 +720,10 @@ const applySettingsButton = document.getElementById('applySettings');
 const titleInput = document.getElementById('cardTitle');
 const headerColorInput = document.getElementById('headerColor');
 const cardSizeInput = document.getElementById('cardSize');
-// const cardContainer = document.getElementById('cardContainer');
-// const grid = document.querySelector('.grid-stack');
-// const gsItems = [];
 
-
-// let textEditMode = false;
-// let locked = false;
-// let textEditModeLocked = false;
-
+let textEditMode = false;
+let locked = false;
+let textEditModeLocked = false;
 
 // Xử lý khi click vào nút mở popup
 openPopupButton.addEventListener('click', function () {
@@ -722,370 +738,119 @@ document.getElementById('closePopup').addEventListener('click', function() {
   document.getElementById('popup').style.display = 'none';
 });
 
-// Xử lý khi click vào nút áp dụng thiết lập
-applySettingsButton.addEventListener('click', function () {
+let cardCounter = 1;
+
+applySettingsButton.addEventListener('click', handleApplySettings);
+
+function handleApplySettings() {
   const title = titleInput.value;
   const headerColor = headerColorInput.value;
   const cardSize = cardSizeInput.value;
 
-  // Tạo card mới và thêm vào trang
   const newData = {
     areaNo: '',
-    cardNo: 100,
-    cardType: 2,
-    colorCode: '000000',
+    cardNo: cardCounter,
+    cardType: 4,
+    colorCode: headerColor,
     lineIdx: 0,
+    cardSize: cardSize,
     name: title,
   };
 
-  let n = createWidgetCardElement(newData);
-  // n.noMove = !!isMobile || (column <= 4) || (glocationFixFlag==1);
-  gs.addWidget(n);
-  // console.log('id=' + n.id + ' x=' + n.x + ' y=' + n.y + ' text=' + n.text );
-  const cloneN = JSON.parse(JSON.stringify(n));
-  gsItems[cloneN.id] = cloneN;
-  gs.batchUpdate(false);
-  resizeGrid();
+  cardCounter++;
 
-  // createCard(newCardData, cardContainer);
+  let newItem = createWidgetCardElement(newData);
+  newItemElement = gs.addWidget(newItem);
 
-  // // Lưu vị trí của card vào localStorage
-  // const cardsData = getCardsDataFromLocalStorage();
-  // cardsData.push(newCardData);
-  // localStorage.setItem('cardsData', JSON.stringify(cardsData));
-
-  // Ẩn popup
   popup.style.display = 'none';
-});
 
-
-// // Hàm tạo card từ dữ liệu và thêm vào cardContainer
-// function createCard(cardData, cardContainer) {
-//   const newCard = document.createElement('div');
-//   newCard.className = 'card grid-stack-item';
-//   newCard.style.width = `${cardData.cardSize * 200}px`;
-//   newCard.style.height = `${cardData.cardSize * 200}px`;
-//   const defaultTop = cardData.top || 0; // Vị trí mặc định nếu không được xác định
-//   const defaultLeft = cardData.left || 0; // Vị trí mặc định nếu không được xác định
-
-//   let top = defaultTop;
-//   let left = defaultLeft;
-//   let isOverlap = true;
-
-//   // Kiểm tra vị trí không trùng lặp với các card khác
-//   while (isOverlap) {
-//     isOverlap = false;
-//     for (const card of cardContainer.children) {
-//       const cardTop = parseInt(card.style.top);
-//       const cardLeft = parseInt(card.style.left);
-//       if (cardTop === top && cardLeft === left) {
-//         // Card mới trùng vị trí với card đã tồn tại
-//         isOverlap = true;
-//         top += 10; // Tăng giá trị top để thay đổi vị trí
-//         left += 10; // Tăng giá trị left để thay đổi vị trí
-//         break;
-//       }
-//     }
-//   }
-
-//   newCard.style.top = `${top}px`;
-//   newCard.style.left = `${left}px`;
-
-//   const newCardHeader = document.createElement('div');
-//   newCardHeader.className = 'card-header';
-//   newCardHeader.style.backgroundColor = cardData.headerColor;
-
-//   const lockIcon = document.createElement('span');
-//   lockIcon.className = 'lock-icon';
-//   lockIcon.innerHTML = '&#128275;'; // Mã HTML cho icon khóa
-//   newCardHeader.appendChild(lockIcon);
-
-
-//   // Thêm icon X vào header
-//   const deleteIcon = document.createElement('span');
-//   deleteIcon.className = 'delete-icon';
-//   deleteIcon.innerHTML = '&#10006;'; // Mã HTML cho ký tự X
-//   newCardHeader.appendChild(deleteIcon);
-
-//   const newCardHeaderTitle = document.createElement('span');
-//   newCardHeaderTitle.innerText = cardData.title;
-//   newCardHeader.appendChild(newCardHeaderTitle);
-
-//   const newCardBody = document.createElement('div');
-//   newCardBody.className = 'card-body';
-
-//   newCard.appendChild(newCardHeader);
-//   newCard.appendChild(newCardBody);
-//   cardContainer.appendChild(newCard);
-//   gsItems.push(newCard);
-
-//   // Kích hoạt việc di chuyển card
-//   enableDrag(newCard);
-
-//   // Thêm sự kiện double-click để chuyển sang chế độ nhập text
-//   newCard.addEventListener('dblclick', function () {
-//     if (!textEditMode && !textEditModeLocked) {
-//       enterTextEditMode(newCard);
-//       textEditMode = true;
-//     }
-//   });
+  // Tìm các phần tử DOM có class "card-type-4" trong phần tử newItemElement
+  const cardType4Elements = newItemElement.getElementsByClassName("card-type-4");
   
-//   // Xử lý sự kiện xóa card khi click vào icon X
-//   newCardHeader.addEventListener('click', function (event) {
-//     if (event.target.classList.contains('delete-icon')) {
-//       // Hiển thị popup xác nhận xóa
-//       showDeleteConfirmationPopup(cardData, newCard);
-//     }
-//   });
-
-//   lockIcon.addEventListener('click', function () {
-//     locked = !locked;
-//     if (locked) {
-//       lockIcon.innerHTML = '&#128274;'; // Mã HTML cho icon đóng khóa
-//       disableCardActions(newCard);
-//       textEditModeLocked = true;
-//     } else {
-//       lockIcon.innerHTML = '&#128275;'; // Mã HTML cho icon khóa
-//       enableCardActions(newCard);
-//       textEditModeLocked = false;
-//     }
-//   });
-// }
-
-// // Hàm kích hoạt di chuyển card
-// function enableDrag(element) {
-//   let pos1 = 0,
-//     pos2 = 0,
-//     pos3 = 0,
-//     pos4 = 0;
-//   const header = element.querySelector('.card-header');
-//   header.onmousedown = dragMouseDown;
-
-//   function dragMouseDown(e) {
-//     e = e || window.event;
-//     e.preventDefault();
-//     // Chỉ kích hoạt di chuyển khi nhấp chuột trên thanh header
-//     if (e.target === header) {
-//       pos3 = e.clientX;
-//       pos4 = e.clientY;
-//       document.onmouseup = closeDragElement;
-//       document.onmousemove = elementDrag;
-//     }
-//   }
-
-//   function elementDrag(e) {
-//     e = e || window.event;
-//     e.preventDefault();
-//     pos1 = pos3 - e.clientX;
-//     pos2 = pos4 - e.clientY;
-//     pos3 = e.clientX;
-//     pos4 = e.clientY;
-//     element.style.top = element.offsetTop - pos2 + 'px';
-//     element.style.left = element.offsetLeft - pos1 + 'px';
-//   }
-
-//   function closeDragElement() {
-//     document.onmouseup = null;
-//     document.onmousemove = null;
-
-//     // Lưu vị trí mới của card vào localStorage
-//     const cardsData = getCardsDataFromLocalStorage();
-//     const cardIndex = Array.from(cardContainer.children).indexOf(element);
-//     if (cardIndex !== -1) {
-//       cardsData[cardIndex].top = element.offsetTop;
-//       cardsData[cardIndex].left = element.offsetLeft;
-//       localStorage.setItem('cardsData', JSON.stringify(cardsData));
-//     }
-//   }
-// }
-
-// // Hàm lấy dữ liệu card từ localStorage
-// function getCardsDataFromLocalStorage() {
-//   const cardsData = localStorage.getItem('cardsData');
-//   return cardsData ? JSON.parse(cardsData) : [];
-// }
-
-// // Hàm chuyển sang chế độ nhập text
-// function enterTextEditMode(card) {
-//   const currentContent = card.querySelector('.card-body').innerText;
-
-//   const inputElement = document.createElement('textarea');
-//   inputElement.type = 'text';
-//   inputElement.value = currentContent;
-
-//   // Lấy kích thước của .card-body
-//   const cardBodyStyle = getComputedStyle(card.querySelector('.card-body'));
-//   inputElement.style.width = cardBodyStyle.width;
-//   inputElement.style.height = cardBodyStyle.height;
-
-//   inputElement.addEventListener('blur', function () {
-//     exitTextEditMode(card, inputElement.value);
-//     textEditMode = false;
-//   });
-
-//   const cardBody = card.querySelector('.card-body');
-//   cardBody.innerHTML = ''; // Xóa bỏ nội dung hiện tại của card-body
-//   cardBody.appendChild(inputElement);
-//   inputElement.focus();
-
-//   card.replaceChild(inputElement, card.querySelector('.card-body'));
-//   inputElement.focus();
-// }
-
-// // Hàm thoát khỏi chế độ nhập text
-// function exitTextEditMode(card, newText) {
-//   const newCardBody = document.createElement('div');
-//   newCardBody.className = 'card-body';
-//   newCardBody.innerText = newText;
-
-//   card.replaceChild(newCardBody, card.querySelector('textarea'));
-
-//   // Lưu nội dung mới của card vào localStorage
-//   const cardsData = getCardsDataFromLocalStorage();
-//   const cardIndex = Array.from(cardContainer.children).indexOf(card);
-//   if (cardIndex !== -1) {
-//     cardsData[cardIndex].content = newText;
-//     localStorage.setItem('cardsData', JSON.stringify(cardsData));
-//   }
-// }
-
-// // Hàm hiển thị popup xác nhận xóa
-// function showDeleteConfirmationPopup(cardData, cardElement) {
-//   const deleteConfirmationPopup = document.createElement('div');
-//   deleteConfirmationPopup.className = 'delete-confirmation-popup';
-//   const deleteConfirmationMessage = document.createElement('p');
-//   deleteConfirmationMessage.innerText = 'Are you sure?';
-//   const deleteButton = document.createElement('button');
-//   deleteButton.innerText = 'Delete';
-//   const cancelButton = document.createElement('button');
-//   cancelButton.className = 'cancel-delete';
-//   cancelButton.innerText = 'Cancel';
-
-//   deleteConfirmationPopup.appendChild(deleteConfirmationMessage);
-//   deleteConfirmationPopup.appendChild(deleteButton);
-//   deleteConfirmationPopup.appendChild(cancelButton);
-//   cardElement.appendChild(deleteConfirmationPopup);
-
-//   // Xử lý sự kiện click nút Delete
-//   deleteButton.addEventListener('click', function () {
-//     deleteCard(cardData, cardElement);
-//     cardElement.removeChild(deleteConfirmationPopup);
-//   });
-
-//   // Xử lý sự kiện click nút Cancel
-//   cancelButton.addEventListener('click', function () {
-//     cardElement.removeChild(deleteConfirmationPopup);
-//   });
-// }
-
-// // Hàm xóa card
-// function deleteCard(cardData, cardElement) {
-//   // Xóa card khỏi localStorage
-//   const cardsData = getCardsDataFromLocalStorage();
-//   const cardIndex = cardsData.findIndex(function (data) {
-//     return (
-//       data.title === cardData.title &&
-//       data.headerColor === cardData.headerColor &&
-//       data.cardSize === cardData.cardSize
-//     );
-//   });
-//   if (cardIndex !== -1) {
-//     cardsData.splice(cardIndex, 1);
-//     localStorage.setItem('cardsData', JSON.stringify(cardsData));
-//   }
-
-//   // Xóa card khỏi giao diện
-//   cardContainer.removeChild(cardElement);
-// }
-
-// function disableCardActions(card) {
-//   card.querySelector('.delete-icon').style.pointerEvents = 'none';
-//   card.querySelector('.card-header').style.cursor = 'default';
-//   card.querySelector('.card-header').onmousedown = null;
-//   card.removeEventListener('dblclick', enterTextEditMode);
-// }
-
-// function enableCardActions(card) {
-//   card.querySelector('.delete-icon').style.pointerEvents = 'auto';
-//   card.querySelector('.card-header').style.cursor = 'move';
-//   enableDrag(card);
-//   card.addEventListener('dblclick', function () {
-//     if (!textEditMode) {
-//       enterTextEditMode(card);
-//       textEditMode = true;
-//     }
-//   });
-// }
-
-// // Khôi phục các card từ localStorage khi tải lại trang
-// window.addEventListener('load', function () {
-//   const cardsData = getCardsDataFromLocalStorage();
-//   for (const cardData of cardsData) {
-//     createCard(cardData, cardContainer);
-//     if (cardData.content) {
-//       const newCardBody = cardContainer.lastElementChild.querySelector('.card-body');
-//       newCardBody.innerText = cardData.content;
-//     }
-//   }
-// });
-
-
-// document.addEventListener("DOMContentLoaded", function() {
-//   // Mã JavaScript của bạn ở đây
-//   function generateCardMemo(card) {
-//     let textColour = setContrast(card.colorCode);
-//     var itemElem = document.createElement("div");
-//     var tbl = '<div id="idDrag' + card.cardNo + '" class="grid-item" data-id="' + card.viewIdx + '" card-no="' + card.cardNo + '" >';
-//     tbl += '<div class="grid-item-content">';
-//     tbl += '<table class="table table-bordered grid-item-content">';
-//     tbl += '<thead class="table-primary panel-heading" style="background-color:' + card.colorCode + ';">';
-//     tbl += '<tr style="height:36px;">';
-//     tbl += '<th colspan="4" class="py-0">';
-//     tbl += '<div class="d-flex justify-content-between" style="height:100%;align-items: center;">';
-//     tbl += '<div id="idHeader' + card.cardNo + '" class="py-0" style="color:' + textColour + ';white-space:nowrap;">' + escapeHtml(card.name) + "</div>";
-//     // tbl += '<img id="idCardImg' + card.cardNo + '" src="" alt="" height="36px">';
-//     tbl += "</div>";
-//     tbl += "</th>";
-//     tbl += "</tr>";
-//     tbl += "</thead>";
+  // Lặp qua các phần tử DOM và thêm nút X vào thẻ tr có class "card-type-4"
+  Array.from(cardType4Elements).forEach((cardType4Element) => {
+    cardType4Element.addEventListener('dblclick', function() {
+      if (!locked) { // Kiểm tra khóa có bật hay không
+        textEditMode = true;
+        const textElement = this.querySelector('.text-input');
+        textElement.disabled = false;
+        textElement.focus();
   
-//     tbl += '<tbody id="idCardBody' + card.cardNo + '">';
+        textElement.addEventListener('blur', function() {
+          textEditMode = false;
+          textElement.disabled = true;
+        });
   
-//     var dataIdxMax;
-//     if (card.cardType === 0) {
-//       // Remaining code for the "計測カード" card type
-//     } else if (card.cardType === 1) {
-//       // Remaining code for the "予報カード" card type
-//     } else if (card.cardType === 3) {
-//       // Remaining code for the "グラフカード" card type
-//     } else if (card.cardType === 4) {
-//       tbl += '<tr>';
-//       tbl += '<td colspan="4" style="padding: 0;">';
-//       tbl += '<textarea id="textarea' + card.cardNo + '" class="form-control" rows="3" placeholder="Enter text"></textarea>';
-//       tbl += '</td>';
-//       tbl += '</tr>';
-//     }
+        textElement.addEventListener('keydown', function(event) {
+          if (event.key === 'Escape') {
+            textEditMode = false;
+            textElement.disabled = true;
+          }
+        });
+      }
+    });
+      // Thêm phần tử nhập văn bản
+    const textInput = document.createElement('textarea');
+    textInput.type = 'text';
+    textInput.className = 'text-input';
+    textInput.disabled = true;
+
+  cardType4Element.appendChild(textInput);
+    const trElement = cardType4Element.closest("tr");
   
-//     tbl += "</tbody>";
-//     tbl += "</table>";
-//     tbl += "</div>";
-//     tbl += "</div>";
+    if (trElement) {
+      // Tạo phần tử span cho nút X
+      const deleteIcon = document.createElement("span");
+      deleteIcon.className = "delete-icon";
+      deleteIcon.innerHTML = "&#10006;"; // Mã HTML cho ký tự X
   
-//     itemElem.innerHTML = tbl;
-//     // Add the generated card to the grid stack
-//     var gridStack = document.getElementById("grid-stack");
-//     if (gridStack) {
-//       gridStack.appendChild(itemElem);
-//     }
-//   }
+      const lockIcon = document.createElement('span');
+      lockIcon.className = 'lock-icon';
+      lockIcon.innerHTML = '&#128275;'; // Mã HTML cho icon khóa
   
-//   // Example usage
-//   var cardMemo = {
-//     name: "Memo Card",
-//     colorCode: "#ff0000",
-//     cardType: 4,
-//     // Add other properties specific to the "cardMemo" type
-//   };
+      // Thêm sự kiện click vào nút X để xóa card
+      deleteIcon.addEventListener("click", function () {
+        // Hiển thị hộp thoại xác nhận
+        const confirmDelete = confirm("Are you sure?");
+
+        // Kiểm tra xem người dùng đã xác nhận xóa hay chưa
+        if (confirmDelete) {
+          // Tìm phần tử cha (card) chứa nút X
+          const cardElement = this.closest(".grid-stack-item");
+
+          // Kiểm tra xem có tìm thấy phần tử cha hay không
+          if (cardElement) {
+            // Xóa phần tử cha (card)
+            cardElement.remove();
+          }
+        }
+      });
+
   
-//   generateCardMemo(cardMemo);
-// });
+      lockIcon.addEventListener('click', function () {
+        locked = !locked;
+        if (locked) {
+          lockIcon.innerHTML = '&#128274;'; // Mã HTML cho icon đóng khóa
+          disableCardActions(deleteIcon);
+          textEditModeLocked = true;
+        } else {
+          lockIcon.innerHTML = '&#128275;'; // Mã HTML cho icon khóa
+          enableCardActions(deleteIcon);
+          textEditModeLocked = false;
+        }
+      });
+      
+      // Thêm nút X vào thẻ tr
+      trElement.appendChild(deleteIcon);
+      trElement.appendChild(lockIcon);
+    }
+  });
+  
+}
+    function disableCardActions(deleteIcon) {
+      deleteIcon.style.pointerEvents = 'none';
+    }
+
+    function enableCardActions(deleteIcon) {
+      deleteIcon.style.pointerEvents = 'auto';
+    }
